@@ -20,7 +20,13 @@ const saveDb = async () => {
 
 app.get('/', async (req, res) => {
 	await saveDb();
-	res.send('<h1>Full Cycle Rocks!</h1> \n - Lista de nomes cadastrada no banco de dados.');
+
+	const sql = `SELECT * FROM people`;
+	connection.query(sql, function (err, result) {
+		if (err) throw err;
+		const r = result ? result : [];
+		res.send(`<h1>Full Cycle Rocks!</h1> \n <div> - Lista de nomes cadastrada no banco de dados.</div> \n <ul>${r.map((i) => `<li>${i.id} - ${i.name}</li>`).join('')}</ul>`);
+	});
 });
 
 app.listen(port, () => {
